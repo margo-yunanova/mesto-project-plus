@@ -5,4 +5,7 @@
 - Mongodb и ODM Mongoose для хранения данных пользователей
 - Node.js в качестве среды выполнения
 
-Перед отправкой работы на проверку убедитесь что она соответствует требованиям проектной работы
+[Чек-лист первого этапа](https://code.s3.yandex.net/web-plus/checklists/checklist_pdf/checklist_20.pdf)
+
+
+[Чек-лист второго этапа](https://code.s3.yandex.net/web-plus/checklists/checklist_pdf/checklist_21.pdf)
