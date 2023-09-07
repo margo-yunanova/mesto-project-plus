@@ -1,16 +1,32 @@
 import { Request, Response, NextFunction } from "express";
+import { StatusCodes } from "http-status-codes";
 import users from "../db/users";
+import cards from "../db/cards";
 
 const doesUserExist = (req: Request, res: Response, next: NextFunction) => {
-  const userIndex = users.findIndex(({ id }) => id === +req.body._id);
-  if (userIndex < 0) {
-    // TODO зачем проверять ошибку, if (err.name === 'SomeErrorName')
-    res.status(404).send({
-      message: "Запрашиваемый пользователь не найден",
+  const fakeUserId = "42";
+  const user = users.find(({ _id }) => _id === fakeUserId);
+  if (!user) {
+    res.status(StatusCodes.NOT_FOUND).send({
+      message: "Пользователь по указанному _id не найден",
     });
     return;
   }
   next();
 };
 
-export default doesUserExist;
+const doesCardExist = (req: Request, res: Response, next: NextFunction) => {
+  const { cardId } = req.params;
+  const card = cards.find(({ _id }) => _id === cardId);
+
+  if (!card) {
+    res
+      .status(StatusCodes.NOT_FOUND)
+      .send({ message: "Карточка с указанным _id не найдена" });
+    return;
+  }
+
+  next();
+};
+
+export { doesUserExist, doesCardExist };
