@@ -1,18 +1,19 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, RequestHandler } from "express";
 import { StatusCodes } from "http-status-codes";
-import users from "../db/users";
 import cards from "../db/cards";
+import users from "../models/users";
 
-const doesUserExist = (req: Request, res: Response, next: NextFunction) => {
-  const fakeUserId = "42";
-  const user = users.find(({ _id }) => _id === fakeUserId);
-  if (!user) {
+const doesUserExist: RequestHandler = async (req, res, next) => {
+  const fakeUserId = "64fb89ad64b9c50cbda226df";
+  const { userId } = req.params;
+  try {
+    await users.findById(userId || fakeUserId);
+    next();
+  } catch {
     res.status(StatusCodes.NOT_FOUND).send({
       message: "Пользователь по указанному _id не найден",
     });
-    return;
   }
-  next();
 };
 
 const doesCardExist = (req: Request, res: Response, next: NextFunction) => {
