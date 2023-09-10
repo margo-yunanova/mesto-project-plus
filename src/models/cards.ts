@@ -37,7 +37,7 @@ const cardSchema = new mongoose.Schema<ICard>({
   },
   createdAt: {
     type: Date,
-    default: Date.now, // TODO: string?
+    default: Date.now,
   },
 });
 
