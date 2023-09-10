@@ -1,35 +1,29 @@
 import { Request, Response, RequestHandler } from "express";
 import { StatusCodes } from "http-status-codes";
 import users from "../models/users";
+import ErrorExpress from "../constants/errors";
 
-export const getUsers: RequestHandler = async (req, res) => {
-  try {
-    const usersDb = await users.find();
-
-    if (!usersDb) {
-      res.status(StatusCodes.NOT_FOUND).send({
-        message: "Пользователей в базе данных нет",
-      });
-      return;
+const catchError: (handler: RequestHandler) => RequestHandler =
+  (handler) => async (req, res, next) => {
+    try {
+      await handler(req, res, next);
+    } catch (e) {
+      next(e);
     }
+  };
 
-    res.send({ usersDb });
-  } catch {
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send({ message: "Произошла ошибка" });
-  }
-};
+export const getUsers: RequestHandler = catchError(async (req, res, next) => {
+  const usersDb = await Promise.reject(new Error("ошибка")); // users.find();
+  res.send({ usersDb });
+});
 
-export const getUser: RequestHandler = async (req, res) => {
+export const getUser: RequestHandler = async (req, res, next) => {
   const { userId } = req.params;
   try {
     const user = await users.findById(userId);
     res.send({ user });
-  } catch {
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send({ message: "Произошла ошибка" });
+  } catch (e) {
+    next(e);
   }
 };
 
