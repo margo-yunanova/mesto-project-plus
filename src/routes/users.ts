@@ -20,11 +20,11 @@ router.all([userURL, updateProfileURL, updateAvatarURL], doesUserExist);
 // GET /users — возвращает всех пользователей
 router.get(usersURL, getUsers);
 
-// GET /users/:userId - возвращает пользователя по _id
-router.get(userURL, getUser);
-
 // POST /users — создаёт пользователя
 router.post(usersURL, createUser);
+
+// GET /users/:userId - возвращает пользователя по _id
+router.get(userURL, getUser);
 
 // PATCH /users/me — обновляет профиль
 router.patch(updateProfileURL, updateProfile);

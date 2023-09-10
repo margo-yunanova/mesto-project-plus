@@ -1,11 +1,6 @@
-import express, {
-  Request,
-  Response,
-  NextFunction,
-  ErrorRequestHandler,
-} from "express";
+import express from "express";
+import "express-async-errors";
 import mongoose from "mongoose";
-import { StatusCodes } from "http-status-codes";
 import userRouter from "./routes/users";
 import cardsRouter from "./routes/cards";
 import { errorHandler } from "./middleware/middleware";

@@ -5,21 +5,32 @@ import {
   RequestHandler,
   ErrorRequestHandler,
 } from "express";
+import mongoose from "mongoose";
+import createError from "http-errors";
 import { StatusCodes } from "http-status-codes";
 import cards from "../db/cards";
 import users from "../models/users";
-
+// TODO me and :userId
 const doesUserExist: RequestHandler = async (req, res, next) => {
-  const fakeUserId = "64fb89ad64b9c50cbda226df";
+  const fakeUserId = "64fdaa7d264ecd35c49ced28";
+  const fakeNotExistUserId = "64fb89ad64b9c50cbda226df";
   const { userId } = req.params;
-  try {
-    await users.findById(userId || fakeUserId);
-    next();
-  } catch {
-    res.status(StatusCodes.NOT_FOUND).send({
-      message: "Пользователь по указанному _id не найден",
-    });
-  }
+  console.log(userId);
+  // if (!mongoose.Types.ObjectId.isValid(userId))
+  //   throw createError(
+  //     StatusCodes.BAD_REQUEST,
+  //     "Тип _id не соответствует ObjectId",
+  //   );
+
+  const user = await users.findById(userId || fakeUserId);
+
+  if (!user)
+    throw createError(
+      StatusCodes.NOT_FOUND,
+      "Пользователь по указанному _id не найден",
+    );
+
+  next();
 };
 
 const doesCardExist = (req: Request, res: Response, next: NextFunction) => {
@@ -36,7 +47,7 @@ const doesCardExist = (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
-const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
+const errorHandler: ErrorRequestHandler = (err, req, res) => {
   console.error(err);
   if (err.statusCode) {
     res.status(err.statusCode).send({ message: err.message });
