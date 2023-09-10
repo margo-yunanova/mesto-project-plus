@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import userRouter from "./routes/users";
 import cardsRouter from "./routes/cards";
 import { errorHandler } from "./middleware/middleware";
+import { fakeUserId } from "./constants/constants";
 
 const { PORT = 3000 } = process.env;
 
@@ -12,7 +13,14 @@ mongoose.set("strictQuery", false);
 mongoose.connect("mongodb://localhost:27017/mesto");
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+app.use((req, res, next) => {
+  req.user = {
+    _id: fakeUserId,
+  };
+
+  next();
+});
 
 app.use("/", cardsRouter);
 app.use("/", userRouter);

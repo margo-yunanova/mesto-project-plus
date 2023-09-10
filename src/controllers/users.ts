@@ -1,23 +1,31 @@
-import { Request, Response, RequestHandler } from "express";
+import { RequestHandler } from "express";
 import createError from "http-errors";
 import { StatusCodes } from "http-status-codes";
 import users from "../models/users";
 
-const fakeUserId = "64fdaa7d264ecd35c49ced28";
-
 export const getUsers: RequestHandler = async (req, res) => {
   const usersDb = await users.find();
-  res.send({ usersDb });
+  res.send([...usersDb]);
 };
+
+/*  по тз бэкенда нет уточнений,
+    по тз фронтеда возвращался объект
+    {
+    "name": "Marie Skłodowska Curie",
+    "about": "Physicist and Chemist",
+    "avatar": "https://pictures.s3.yandex.net/frontend-developer/common/ava.jpg",
+    "_id": "e20537ed11237f86bbb20ccb",
+    "cohort": "cohort0",
+} */
 
 export const getUser: RequestHandler = async (req, res) => {
   const { userId } = req.params;
   const user = await users.findById(userId);
-  res.send({ user });
+  res.send(user);
 };
 
 // TODO проверять если пользователь?
-export const createUser = async (req: Request, res: Response) => {
+export const createUser: RequestHandler = async (req, res) => {
   const { name, about, avatar } = req.body;
 
   if (
@@ -38,7 +46,17 @@ export const createUser = async (req: Request, res: Response) => {
   res.send({ name, about, avatar });
 };
 
-export const updateProfile = async (req: Request, res: Response) => {
+/*  по тз бэкенда вернуть нужно только name и about,
+    по тз фронтеда возвращался весь обновленный профиль пользователя
+    {
+    "name": "Marie Skłodowska Curie",
+    "about": "Physicist and Chemist",
+    "avatar": "https://pictures.s3.yandex.net/frontend-developer/common/ava.jpg",
+    "_id": "e20537ed11237f86bbb20ccb",
+    "cohort": "cohort0",
+} */
+
+export const updateProfile: RequestHandler = async (req, res) => {
   const { name, about } = req.body;
 
   if (
@@ -53,11 +71,21 @@ export const updateProfile = async (req: Request, res: Response) => {
     );
   }
 
-  await users.findByIdAndUpdate(fakeUserId, { name, about });
+  await users.findByIdAndUpdate(req.user._id, { name, about });
   res.send({ name, about });
 };
 
-export const updateAvatar = async (req: Request, res: Response) => {
+/*  по тз бэкенда ничего не написано,
+    по тз фронтеда возвращался весь обновленный профиль пользователя
+    {
+    "name": "Marie Skłodowska Curie",
+    "about": "Physicist and Chemist",
+    "avatar": "https://pictures.s3.yandex.net/frontend-developer/common/ava.jpg",
+    "_id": "e20537ed11237f86bbb20ccb",
+    "cohort": "cohort0",
+} */
+
+export const updateAvatar: RequestHandler = async (req, res) => {
   const { avatar } = req.body;
 
   if (typeof avatar !== "string" || !avatar) {
@@ -67,6 +95,6 @@ export const updateAvatar = async (req: Request, res: Response) => {
     );
   }
 
-  await users.findByIdAndUpdate(fakeUserId, { avatar });
+  await users.findByIdAndUpdate(req.user._id, { avatar });
   res.send({ avatar });
 };

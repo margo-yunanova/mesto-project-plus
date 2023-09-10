@@ -1,28 +1,20 @@
-import {
-  Request,
-  Response,
-  NextFunction,
-  RequestHandler,
-  ErrorRequestHandler,
-} from "express";
+import { RequestHandler, ErrorRequestHandler } from "express";
 import mongoose from "mongoose";
 import createError from "http-errors";
 import { StatusCodes } from "http-status-codes";
-import cards from "../db/cards";
+import cards from "../models/cards";
 import users from "../models/users";
-// TODO me and :userId
-const doesUserExist: RequestHandler = async (req, res, next) => {
-  const fakeUserId = "64fdaa7d264ecd35c49ced28";
-  const fakeNotExistUserId = "64fb89ad64b9c50cbda226df";
-  const { userId } = req.params;
-  console.log(userId);
-  // if (!mongoose.Types.ObjectId.isValid(userId))
-  //   throw createError(
-  //     StatusCodes.BAD_REQUEST,
-  //     "Тип _id не соответствует ObjectId",
-  //   );
 
-  const user = await users.findById(userId || fakeUserId);
+export const doesUserExistForGet: RequestHandler = async (req, res, next) => {
+  const { userId } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(userId))
+    throw createError(
+      StatusCodes.BAD_REQUEST,
+      "Тип _id не соответствует ObjectId",
+    );
+
+  const user = await users.findById(userId);
 
   if (!user)
     throw createError(
@@ -33,29 +25,40 @@ const doesUserExist: RequestHandler = async (req, res, next) => {
   next();
 };
 
-const doesCardExist = (req: Request, res: Response, next: NextFunction) => {
+export const doesUserExistForPatch: RequestHandler = async (req, res, next) => {
+  const user = await users.findById(req.user._id);
+
+  if (!user)
+    throw createError(
+      StatusCodes.NOT_FOUND,
+      "Пользователь по указанному _id не найден",
+    );
+
+  next();
+};
+
+export const doesCardExist: RequestHandler = async (req, res, next) => {
   const { cardId } = req.params;
-  const card = cards.find(({ _id }) => _id === cardId);
+  const card = await cards.findById(cardId);
 
   if (!card) {
-    res
-      .status(StatusCodes.NOT_FOUND)
-      .send({ message: "Карточка с указанным _id не найдена" });
-    return;
+    throw createError(
+      StatusCodes.NOT_FOUND,
+      "Карточка с указанным _id не найдена",
+    );
   }
 
   next();
 };
 
-const errorHandler: ErrorRequestHandler = (err, req, res) => {
+export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   console.error(err);
   if (err.statusCode) {
     res.status(err.statusCode).send({ message: err.message });
     return;
   }
+
   res
     .status(StatusCodes.INTERNAL_SERVER_ERROR)
     .send({ message: "Произошла ошибка" });
 };
-
-export { doesUserExist, doesCardExist, errorHandler };
