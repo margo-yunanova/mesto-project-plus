@@ -5,8 +5,7 @@
     },
     "extends": [
         "airbnb-base",
-        "prettier",
-        "plugin:prettier/recommended"
+        "prettier"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -41,6 +40,11 @@
                 "ts": "never"
             }
         ],
+        //TODO: fix Enum type
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": "error",
+        "no-shadow": "off",
+        "@typescript-eslint/no-shadow": ["error"]
     },
     "overrides": [
       {
