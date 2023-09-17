@@ -27,15 +27,17 @@ const userSchema = new mongoose.Schema<IUser>({
   },
   name: {
     type: String,
-    required: true,
+    required: false,
     minlength: 2,
     maxlength: 30,
+    default: "Жак-Ив Кусто",
   },
   about: {
     type: String,
-    required: true,
+    required: false,
     minlength: 2,
     maxlength: 200,
+    default: "Исследователь",
   },
   avatar: {
     type: String,
@@ -45,7 +47,9 @@ const userSchema = new mongoose.Schema<IUser>({
       },
       message: "Некорректный URL",
     },
-    required: true,
+    required: false,
+    default:
+      "https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png",
   },
 });
 

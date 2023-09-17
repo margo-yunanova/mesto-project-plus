@@ -1,6 +1,8 @@
 import { RequestHandler } from "express";
 import createError from "http-errors";
 import { StatusCodes } from "http-status-codes";
+import validator from "validator";
+import bcryptjs from "bcryptjs";
 import users from "../models/users";
 
 export const getUsers: RequestHandler = async (req, res) => {
@@ -24,26 +26,24 @@ export const getUser: RequestHandler = async (req, res) => {
   res.send(user);
 };
 
-// TODO проверять если пользователь?
 export const createUser: RequestHandler = async (req, res) => {
-  const { name, about, avatar } = req.body;
+  const { name, about, avatar, email, password } = req.body;
 
-  if (
-    typeof name !== "string" ||
-    typeof about !== "string" ||
-    typeof avatar !== "string" ||
-    !name ||
-    !about ||
-    !avatar
-  ) {
+  if (!validator.isEmail(email) || validator.isEmpty(password)) {
     throw createError(
       StatusCodes.BAD_REQUEST,
       "Переданы некорректные данные при создании пользователя",
     );
   }
-
-  await users.create({ name, about, avatar });
-  res.send({ name, about, avatar });
+  const hashPassword = await bcryptjs.hash(password, 10);
+  const user = await users.create({
+    name,
+    about,
+    avatar,
+    email,
+    password: hashPassword,
+  });
+  res.send(user);
 };
 
 /*  по тз бэкенда вернуть нужно только name и about,
