@@ -65,12 +65,7 @@ export const createUser: RequestHandler = async (req, res) => {
 export const updateProfile: RequestHandler = async (req, res) => {
   const { name, about } = req.body;
 
-  if (
-    typeof name !== "string" ||
-    typeof about !== "string" ||
-    !name ||
-    !about
-  ) {
+  if (validator.isEmpty(name) || validator.isEmpty(about)) {
     throw createError(
       StatusCodes.BAD_REQUEST,
       "Переданы некорректные данные при обновлении профиля",
@@ -94,7 +89,7 @@ export const updateProfile: RequestHandler = async (req, res) => {
 export const updateAvatar: RequestHandler = async (req, res) => {
   const { avatar } = req.body;
 
-  if (typeof avatar !== "string" || !avatar) {
+  if (!validator.isURL(avatar)) {
     throw createError(
       StatusCodes.BAD_REQUEST,
       "Переданы некорректные данные при обновлении аватара",
