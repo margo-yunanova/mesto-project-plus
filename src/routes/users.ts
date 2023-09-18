@@ -10,7 +10,6 @@ import {
   doesUserExistForPatch,
 } from "../middleware/middleware";
 import {
-  createUser,
   getUser,
   getUsers,
   updateAvatar,
@@ -22,9 +21,6 @@ router.patch([updateProfileURL, updateAvatarURL], doesUserExistForPatch);
 
 // GET /users — возвращает всех пользователей
 router.get(usersURL, getUsers);
-
-// POST /users — создаёт пользователя
-router.post(usersURL, createUser);
 
 // GET /users/:userId - возвращает пользователя по _id
 router.get(userURL, doesUserExistForGet);
