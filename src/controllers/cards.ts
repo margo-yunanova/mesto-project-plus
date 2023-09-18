@@ -32,7 +32,7 @@ import cards from "../models/cards";
 */
 
 export const getCards: RequestHandler = async (req, res) => {
-  const cardsDb = await cards.find();
+  const cardsDb = await cards.find().populate(["owner", "likes"]);
   res.send({ cardsDb });
 };
 
@@ -64,15 +64,15 @@ export const createCard: RequestHandler = async (req, res) => {
     );
   }
 
-  await cards.create({
+  const card = await cards.create({
     name,
     link,
     owner: req.user._id,
     likes: [],
     createdAt: new Date().toUTCString(),
   });
-
-  res.send({ name, link });
+  await card.populate(["owner", "likes"]);
+  res.send(card);
 };
 
 export const deleteCard: RequestHandler = async (req, res) => {
@@ -89,23 +89,27 @@ export const deleteCard: RequestHandler = async (req, res) => {
 export const putLike: RequestHandler = async (req, res) => {
   const { cardId } = req.params;
 
-  await cards.findByIdAndUpdate(
-    cardId,
-    { $addToSet: { likes: req.user._id } },
-    { new: true },
-  );
+  const card = await cards
+    .findByIdAndUpdate(
+      cardId,
+      { $addToSet: { likes: req.user._id } },
+      { new: true },
+    )
+    .populate(["owner", "likes"]);
 
-  res.send({ message: "Лайк поставлен" });
+  res.send({ card, message: "Лайк поставлен" });
 };
 
 export const deleteLike: RequestHandler = async (req, res) => {
   const { cardId } = req.params;
 
-  await cards.findByIdAndUpdate(
-    cardId,
-    { $pull: { likes: req.user._id } },
-    { new: true },
-  );
+  const card = await cards
+    .findByIdAndUpdate(
+      cardId,
+      { $pull: { likes: req.user._id } },
+      { new: true },
+    )
+    .populate(["owner", "likes"]);
 
-  res.send({ message: "Лайк удалён" });
+  res.send({ card, message: "Лайк удалён" });
 };
