@@ -77,8 +77,16 @@ export const createCard: RequestHandler = async (req, res) => {
 
 export const deleteCard: RequestHandler = async (req, res) => {
   const { cardId } = req.params;
+  const { _id } = req.user;
 
-  await cards.findByIdAndDelete(cardId);
+  const card = await cards.findOneAndDelete({ _id: cardId, owner: { _id } });
+
+  if (!card) {
+    throw createError(
+      StatusCodes.BAD_REQUEST,
+      "Переданы некорректные данные при удалении карточки",
+    );
+  }
   res.send({ message: "Пост удалён" });
 };
 

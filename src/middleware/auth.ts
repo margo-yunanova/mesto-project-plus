@@ -12,13 +12,13 @@ export const auth: RequestHandler = (req, res, next) => {
 
   const token = authorization.replace("Bearer ", "");
 
-  let payload: string | jwt.JwtPayload;
+  let payload: jwt.JwtPayload;
   try {
-    payload = jwt.verify(token, "aethun0I");
+    payload = jwt.verify(token, "aethun0I") as jwt.JwtPayload;
   } catch {
     throw createError(StatusCodes.UNAUTHORIZED, "'Необходима авторизация'");
   }
 
-  req.user = payload;
+  req.user = { _id: payload._id };
   next();
 };

@@ -6,7 +6,6 @@ import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import users from "../models/users";
 
-// TODO мидлваря существует ли юзер
 export const login: RequestHandler = async (req, res) => {
   const { email, password } = req.body;
 
@@ -17,7 +16,7 @@ export const login: RequestHandler = async (req, res) => {
     );
   }
 
-  const user = await users.findOne({ email });
+  const user = await users.findOne({ email }).select("+password");
 
   if (!user)
     throw createError(
@@ -33,7 +32,7 @@ export const login: RequestHandler = async (req, res) => {
       "Переданы некорректные данные при авторизации",
     );
 
-  const token = jwt.sign({ _id: user._id }, "aethun0I", { expiresIn: "7d" }); // 1000 * 60 * 60 * 24 * 7
+  const token = jwt.sign({ _id: user._id }, "aethun0I", { expiresIn: "7d" });
 
   // TODO записать JWT в httpOnly куку
 

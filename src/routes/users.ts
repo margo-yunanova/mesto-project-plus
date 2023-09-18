@@ -1,7 +1,7 @@
 import { Router } from "express";
 import {
   updateAvatarURL,
-  updateProfileURL,
+  profileURL,
   userURL,
   usersURL,
 } from "../constants/routes";
@@ -10,24 +10,27 @@ import {
   doesUserExistForPatch,
 } from "../middleware/middleware";
 import {
-  getUser,
+  getUserById,
   getUsers,
+  getUser,
   updateAvatar,
   updateProfile,
 } from "../controllers/users";
 
 const router = Router();
-router.patch([updateProfileURL, updateAvatarURL], doesUserExistForPatch);
+router.patch([profileURL, updateAvatarURL], doesUserExistForPatch);
 
 // GET /users — возвращает всех пользователей
 router.get(usersURL, getUsers);
 
 // GET /users/:userId - возвращает пользователя по _id
 router.get(userURL, doesUserExistForGet);
-router.get(userURL, getUser);
+router.get(userURL, getUserById);
 
+// GET /users/me — получить профиль
+router.get(profileURL, getUser);
 // PATCH /users/me — обновляет профиль
-router.patch(updateProfileURL, updateProfile);
+router.patch(profileURL, updateProfile);
 
 // PATCH /users/me/avatar — обновляет аватар
 router.patch(updateAvatarURL, updateAvatar);

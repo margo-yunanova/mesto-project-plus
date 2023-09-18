@@ -21,6 +21,12 @@ export const getUsers: RequestHandler = async (req, res) => {
 } */
 
 export const getUser: RequestHandler = async (req, res) => {
+  const { _id } = req.user;
+  const user = await users.findById(_id);
+  res.send(user);
+};
+
+export const getUserById: RequestHandler = async (req, res) => {
   const { userId } = req.params;
   const user = await users.findById(userId);
   res.send(user);
