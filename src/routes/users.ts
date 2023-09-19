@@ -19,26 +19,15 @@ import {
 } from "../controllers/users";
 
 const router = Router();
-router.patch([profileURL, updateAvatarURL], doesUserExistForPatch);
 
-// GET /users — возвращает всех пользователей
 router.get(usersURL, getUsers);
 
-// GET /users/:userId - возвращает пользователя по _id
-router.get(userURL, doesUserExistForGet);
-router.get(
-  userURL,
-  celebrate({
-    params: Joi.object().keys({
-      userId: Joi.string().required(),
-    }),
-  }),
-  getUserById,
-);
-
-// GET /users/me — получить профиль
 router.get(profileURL, getUser);
-// PATCH /users/me — обновляет профиль
+
+router.get(userURL, doesUserExistForGet, getUserById);
+
+router.patch([profileURL, updateAvatarURL], doesUserExistForPatch);
+
 router.patch(
   profileURL,
   celebrate({
@@ -50,7 +39,6 @@ router.patch(
   updateProfile,
 );
 
-// PATCH /users/me/avatar — обновляет аватар
 router.patch(
   updateAvatarURL,
   celebrate({

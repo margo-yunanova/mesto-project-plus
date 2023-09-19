@@ -17,11 +17,7 @@ import {
 
 const router = Router();
 
-// GET /cards — возвращает все карточки
-
 router.get(cardsURL, getCards);
-
-// POST /cards — создаёт карточку
 
 router.post(
   cardsURL,
@@ -34,40 +30,12 @@ router.post(
   createCard,
 );
 
-// DELETE /cards/:cardId — удаляет карточку по идентификатору
-router.delete(
-  cardURL,
-  doesCardExist,
-  celebrate({
-    params: Joi.object().keys({
-      cardId: Joi.string().required(),
-    }),
-  }),
-  deleteCard,
-);
+router.delete(cardURL, doesCardExist, deleteCard);
 
 router.all([likeCardURL, legacyLikeCardURL], doesCardExist);
 
-// PUT /cards/:cardId/likes — поставить лайк карточке
-router.put(
-  [likeCardURL, legacyLikeCardURL],
-  celebrate({
-    params: Joi.object().keys({
-      cardId: Joi.string().required(),
-    }),
-  }),
-  putLike,
-);
+router.put([likeCardURL, legacyLikeCardURL], putLike);
 
-// DELETE /cards/:cardId/likes — убрать лайк с карточки
-router.delete(
-  [likeCardURL, legacyLikeCardURL],
-  celebrate({
-    params: Joi.object().keys({
-      cardId: Joi.string().required(),
-    }),
-  }),
-  deleteLike,
-);
+router.delete([likeCardURL, legacyLikeCardURL], deleteLike);
 
 export default router;
