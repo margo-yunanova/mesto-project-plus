@@ -30,7 +30,7 @@ export const deleteCard: RequestHandler = async (req, res) => {
 
   if (!card) {
     throw createError(
-      StatusCodes.BAD_REQUEST,
+      StatusCodes.FORBIDDEN,
       "Переданы некорректные данные при удалении карточки",
     );
   }

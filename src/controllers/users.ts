@@ -37,7 +37,7 @@ export const createUser: RequestHandler = async (req, res, next) => {
   } catch {
     next(
       createError(
-        StatusCodes.UNAUTHORIZED,
+        StatusCodes.CONFLICT,
         "Пользователь с указанным email уже существует",
       ),
     );

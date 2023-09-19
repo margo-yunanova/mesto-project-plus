@@ -27,6 +27,5 @@ export const login: RequestHandler = async (req, res) => {
   const token = jwt.sign({ _id: user._id }, "aethun0I", { expiresIn: "7d" });
 
   // TODO записать JWT в httpOnly куку
-
   res.send({ token });
 };
