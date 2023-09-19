@@ -39,6 +39,13 @@ export const doesUserExistForPatch: RequestHandler = async (req, res, next) => {
 
 export const doesCardExist: RequestHandler = async (req, res, next) => {
   const { cardId } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(cardId))
+    throw createError(
+      StatusCodes.BAD_REQUEST,
+      "Тип _id не соответствует ObjectId",
+    );
+
   const card = await cards.findById(cardId);
 
   if (!card) {

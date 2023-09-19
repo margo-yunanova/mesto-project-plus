@@ -1,7 +1,8 @@
 import { Router } from "express";
+import { celebrate, Joi } from "celebrate";
 import {
   updateAvatarURL,
-  updateProfileURL,
+  profileURL,
   userURL,
   usersURL,
 } from "../constants/routes";
@@ -10,30 +11,48 @@ import {
   doesUserExistForPatch,
 } from "../middleware/middleware";
 import {
-  createUser,
-  getUser,
+  getUserById,
   getUsers,
+  getUser,
   updateAvatar,
   updateProfile,
 } from "../controllers/users";
 
 const router = Router();
-router.patch([updateProfileURL, updateAvatarURL], doesUserExistForPatch);
 
-// GET /users — возвращает всех пользователей
 router.get(usersURL, getUsers);
 
-// POST /users — создаёт пользователя
-router.post(usersURL, createUser);
+router.get(profileURL, getUser);
 
-// GET /users/:userId - возвращает пользователя по _id
-router.get(userURL, doesUserExistForGet);
-router.get(userURL, getUser);
+router.get(userURL, doesUserExistForGet, getUserById);
 
-// PATCH /users/me — обновляет профиль
-router.patch(updateProfileURL, updateProfile);
+router.patch([profileURL, updateAvatarURL], doesUserExistForPatch);
 
-// PATCH /users/me/avatar — обновляет аватар
-router.patch(updateAvatarURL, updateAvatar);
+router.patch(
+  profileURL,
+  celebrate({
+    body: Joi.object().keys({
+      name: Joi.string().min(2).max(30).required(),
+      about: Joi.string().min(2).max(200).required(),
+    }),
+  }),
+  updateProfile,
+);
+
+router.patch(
+  updateAvatarURL,
+  celebrate({
+    body: Joi.object()
+      .keys({
+        avatar: Joi.string()
+          .uri()
+          .default(
+            "https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png",
+          ),
+      })
+      .required(),
+  }),
+  updateAvatar,
+);
 
 export default router;
