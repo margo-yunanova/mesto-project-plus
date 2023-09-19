@@ -9,6 +9,7 @@ import { login } from "./controllers/login";
 import { createUser } from "./controllers/users";
 import { auth } from "./middleware/auth";
 import { requestLogger, errorLogger } from "./middleware/logger";
+import users from "./models/users";
 
 const { PORT = 3000 } = process.env;
 
@@ -57,6 +58,11 @@ app.use(errorLogger);
 app.use(errors());
 app.use("/", errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`);
-});
+const main = async () => {
+  await users.init();
+  app.listen(PORT, () => {
+    console.log(`App listening on port ${PORT}`);
+  });
+};
+
+main();
