@@ -1,20 +1,12 @@
 import { RequestHandler } from "express";
 import createError from "http-errors";
 import { StatusCodes } from "http-status-codes";
-import validator from "validator";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import users from "../models/users";
 
 export const login: RequestHandler = async (req, res) => {
   const { email, password } = req.body;
-
-  if (!validator.isEmail(email)) {
-    throw createError(
-      StatusCodes.BAD_REQUEST,
-      "Переданы некорректные данные при авторизации",
-    );
-  }
 
   const user = await users.findOne({ email }).select("+password");
 

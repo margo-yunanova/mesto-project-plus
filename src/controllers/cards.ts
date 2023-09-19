@@ -1,7 +1,6 @@
 import { RequestHandler } from "express";
 import createError from "http-errors";
 import { StatusCodes } from "http-status-codes";
-import validator from "validator";
 import cards from "../models/cards";
 
 /* по тз бэкенда ничего не описано
@@ -57,13 +56,6 @@ export const getCards: RequestHandler = async (req, res) => {
 
 export const createCard: RequestHandler = async (req, res) => {
   const { name, link } = req.body;
-
-  if (validator.isEmpty(name) || !validator.isURL(link)) {
-    throw createError(
-      StatusCodes.BAD_REQUEST,
-      "Переданы некорректные данные при создании карточки",
-    );
-  }
 
   const card = await cards.create({
     name,

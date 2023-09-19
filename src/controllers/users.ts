@@ -1,7 +1,4 @@
 import { RequestHandler } from "express";
-import createError from "http-errors";
-import { StatusCodes } from "http-status-codes";
-import validator from "validator";
 import bcryptjs from "bcryptjs";
 import users from "../models/users";
 
@@ -35,12 +32,6 @@ export const getUserById: RequestHandler = async (req, res) => {
 export const createUser: RequestHandler = async (req, res) => {
   const { name, about, avatar, email, password } = req.body;
 
-  if (!validator.isEmail(email) || validator.isEmpty(password)) {
-    throw createError(
-      StatusCodes.BAD_REQUEST,
-      "Переданы некорректные данные при создании пользователя",
-    );
-  }
   const hashPassword = await bcryptjs.hash(password, 10);
   const user = await users.create({
     name,
@@ -65,13 +56,6 @@ export const createUser: RequestHandler = async (req, res) => {
 export const updateProfile: RequestHandler = async (req, res) => {
   const { name, about } = req.body;
 
-  if (validator.isEmpty(name) || validator.isEmpty(about)) {
-    throw createError(
-      StatusCodes.BAD_REQUEST,
-      "Переданы некорректные данные при обновлении профиля",
-    );
-  }
-
   await users.findByIdAndUpdate(req.user._id, { name, about });
   res.send({ name, about });
 };
@@ -88,13 +72,6 @@ export const updateProfile: RequestHandler = async (req, res) => {
 
 export const updateAvatar: RequestHandler = async (req, res) => {
   const { avatar } = req.body;
-
-  if (!validator.isURL(avatar)) {
-    throw createError(
-      StatusCodes.BAD_REQUEST,
-      "Переданы некорректные данные при обновлении аватара",
-    );
-  }
 
   await users.findByIdAndUpdate(req.user._id, { avatar });
   res.send({ avatar });
