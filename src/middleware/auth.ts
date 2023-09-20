@@ -2,6 +2,7 @@ import { RequestHandler } from "express";
 import createError from "http-errors";
 import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
+import { secretToken } from "../constants/constants";
 
 export const auth: RequestHandler = (req, res, next) => {
   const { authorization } = req.headers;
@@ -14,7 +15,7 @@ export const auth: RequestHandler = (req, res, next) => {
 
   let payload: jwt.JwtPayload;
   try {
-    payload = jwt.verify(token, "aethun0I") as jwt.JwtPayload;
+    payload = jwt.verify(token, secretToken) as jwt.JwtPayload;
   } catch {
     throw createError(StatusCodes.UNAUTHORIZED, "'Необходима авторизация'");
   }

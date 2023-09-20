@@ -4,6 +4,7 @@ import { StatusCodes } from "http-status-codes";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import users from "../models/users";
+import { secretToken } from "../constants/constants";
 
 export const login: RequestHandler = async (req, res) => {
   const { email, password } = req.body;
@@ -24,7 +25,7 @@ export const login: RequestHandler = async (req, res) => {
       "Переданы некорректные данные при авторизации",
     );
 
-  const token = jwt.sign({ _id: user._id }, "aethun0I", { expiresIn: "7d" });
+  const token = jwt.sign({ _id: user._id }, secretToken, { expiresIn: "7d" });
 
   // TODO записать JWT в httpOnly куку
   res.cookie("token", `Bearer ${token}`).send();
