@@ -67,5 +67,5 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
 
   res
     .status(StatusCodes.INTERNAL_SERVER_ERROR)
-    .send({ message: "Произошла ошибка" });
+    .send({ message: "На сервере произошла ошибка" });
 };
