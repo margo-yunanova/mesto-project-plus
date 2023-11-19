@@ -1,6 +1,7 @@
 import express from "express";
 import "express-async-errors";
 import mongoose from "mongoose";
+import cors from "cors";
 import { celebrate, Joi, errors } from "celebrate";
 import userRouter from "./routes/users";
 import cardsRouter from "./routes/cards";
@@ -20,6 +21,13 @@ mongoose.connect("mongodb://127.0.0.1:27017/mesto");
 app.use(requestLogger);
 
 app.use(express.json());
+
+app.use(
+  cors({
+    origin: "http://http://mesto.margo.nomoredomainsmonster.ru",
+    optionsSuccessStatus: 200,
+  }),
+);
 
 app.post(
   "/signin",
