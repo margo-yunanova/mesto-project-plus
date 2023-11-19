@@ -24,7 +24,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: "http://http://mesto.margo.nomoredomainsmonster.ru",
+    origin: "http://mesto.margo.nomoredomainsmonster.ru",
     optionsSuccessStatus: 200,
   }),
 );
