@@ -24,11 +24,10 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: "http://mesto.margo.nomoredomainsmonster.ru",
+    origin: "https://mesto.margo.nomoredomainsmonster.ru",
     optionsSuccessStatus: 200,
   }),
 );
-// app.options("http://mesto.margo.nomoredomainsmonster.ru", cors())
 
 app.post(
   "/signin",
