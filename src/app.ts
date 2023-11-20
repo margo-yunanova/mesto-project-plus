@@ -11,6 +11,7 @@ import { createUser } from "./controllers/users";
 import { auth } from "./middleware/auth";
 import { requestLogger, errorLogger } from "./middleware/logger";
 import users from "./models/users";
+import "dotenv/config";
 
 const { PORT = 3000 } = process.env;
 
