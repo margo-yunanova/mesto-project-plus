@@ -20,7 +20,7 @@ module.exports = {
       path: DEPLOY_PATH,
       "pre-deploy-local": `scp .env ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}`,
       "post-deploy":
-        "npm i && npm run build && cd dist && pm2 start app.js --watch",
+        "npm i && npm run build && cd dist && pm2 start app.js --watch && pm2 save",
     },
   },
 };
