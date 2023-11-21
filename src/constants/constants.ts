@@ -1,5 +1,3 @@
 import "dotenv/config";
 
-const { JWT_SECRET } = process.env;
-
-export const secretToken = JWT_SECRET;
+export const secretToken = process.env.JWT_SECRET!;
