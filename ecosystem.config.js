@@ -8,7 +8,6 @@ module.exports = {
     {
       name: "api-service",
       script: "./dist/app.js",
-      watch: true,
     },
   ],
   deploy: {
@@ -20,7 +19,7 @@ module.exports = {
       path: DEPLOY_PATH,
       "pre-deploy-local": `scp .env ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}`,
       "post-deploy":
-        "npm i && npm run build && cd dist && pm2 start app.js --watch && pm2 save",
+        "npm i && npm run build && pm2 startOrRestart ecosystem.config.js && pm2 save",
     },
   },
 };
